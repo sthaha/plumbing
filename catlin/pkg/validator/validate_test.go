@@ -75,7 +75,9 @@ spec:
   - name: foo
     image: abc.io/fedora:latest
   - name: bar
-    image: abc.io/fedora:1.0@sha256:deadb33fdeadb33fdeadb33f    
+    image: abc.io/fedora:1.0@sha256:deadb33fdeadb33fdeadb33f
+  - name: valid
+    image: abc.io/ubuntu:1.0
 `
 
 var validPipeline = `

@@ -13,11 +13,3 @@
 // limitations under the License.
 
 package validator
-
-type NoopValidator struct{}
-
-var _ Validator = (*NoopValidator)(nil)
-
-func (t *NoopValidator) Validate() Result {
-	return Result{}
-}

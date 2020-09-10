@@ -17,6 +17,7 @@ package validate
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/tektoncd/plumbing/catlin/pkg/app"
@@ -85,10 +86,18 @@ func validate(cli app.CLI, path string) error {
 	// print result
 	out := cli.Stream().Out
 	for _, v := range result.Lints {
-		if v.Kind == validator.Error {
+		switch v.Kind {
+		case validator.Error:
 			fmt.Fprintf(out, "ERROR: %s\n", v.Message)
-		} else {
+		case validator.Warning:
+			fmt.Fprintf(out, "WARN : %s\n", v.Message)
+		case validator.Recommendation:
+			fmt.Fprintf(out, "HINT : %s\n", v.Message)
+		case validator.Info:
 			fmt.Fprintf(out, "INFO : %s\n", v.Message)
+		default:
+			level := strings.ToUpper(string(v.Kind))
+			fmt.Fprintf(out, "%s : %s\n", level, v.Message)
 		}
 	}
 	if result.Errors != 0 {

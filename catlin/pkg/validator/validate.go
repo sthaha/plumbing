@@ -14,6 +14,32 @@
 
 package validator
 
+import (
+	"github.com/tektoncd/plumbing/catlin/pkg/app"
+	"github.com/tektoncd/plumbing/catlin/pkg/parser"
+)
+
 type Validator interface {
 	Validate() Result
+}
+
+func ForKind(cli app.CLI, res *parser.Resource) Validator {
+	switch res.Kind {
+	case "Task":
+		return NewTaskValidator(cli, res)
+	default:
+		return &noopValidator{kind: res.Kind}
+	}
+}
+
+type noopValidator struct {
+	kind string
+}
+
+var _ Validator = (*noopValidator)(nil)
+
+func (v *noopValidator) Validate() Result {
+	r := Result{}
+	r.Info("no validator specific to kind %s", v.kind)
+	return r
 }

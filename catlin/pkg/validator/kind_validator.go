@@ -13,18 +13,3 @@
 // limitations under the License.
 
 package validator
-
-import (
-	"github.com/tektoncd/plumbing/catlin/pkg/app"
-	"github.com/tektoncd/plumbing/catlin/pkg/parser"
-)
-
-func ForKind(cli app.CLI, r *parser.Resource) Validator {
-
-	switch r.Kind {
-	case "Task":
-		return &TaskValidator{res: r, log: cli.Logger().Sugar()}
-	default:
-		return &NoopValidator{}
-	}
-}

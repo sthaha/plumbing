@@ -21,6 +21,7 @@ import (
 	"github.com/tektoncd/pipeline/pkg/apis/pipeline/v1beta1"
 	"go.uber.org/zap"
 
+	"github.com/tektoncd/plumbing/catlin/pkg/app"
 	"github.com/tektoncd/plumbing/catlin/pkg/parser"
 )
 
@@ -30,6 +31,10 @@ type TaskValidator struct {
 }
 
 var _ Validator = (*TaskValidator)(nil)
+
+func NewTaskValidator(cli app.CLI, r *parser.Resource) *TaskValidator {
+	return &TaskValidator{res: r, log: cli.Logger().Sugar()}
+}
 
 func (t *TaskValidator) Validate() Result {
 
@@ -48,6 +53,7 @@ func (t *TaskValidator) Validate() Result {
 			result.Error("Invalid Image Reference: %s", err)
 			continue
 		}
+
 		if strings.Contains(res.String(), "latest") {
 			result.Error("Task image (%s) must be tagged with a specific version", step.Image)
 		}
